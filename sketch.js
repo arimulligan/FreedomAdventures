@@ -22,6 +22,10 @@ let millisRolloverTime, prevSec;
 
 let randomList = [];
 
+// for trees
+let theta;
+var brown;
+
 function preload() {
   Musketeer = new Sprite(window.innerWidth/2, 0, 500, 128);
 
@@ -47,7 +51,8 @@ function setup() {
   // make the pretty grass
   noStroke();
   let ground = new Sprite(0, window.innerHeight-5, window.innerWidth*2, 5, 'static');
-  ground.color = color(115, 58, 17);
+  brown = color(115, 58, 17);
+  ground.color = brown;
   grass = new yard();
 
 }
@@ -108,12 +113,61 @@ function draw() {
 	} else {
 		Musketeer.ani.play();
 	}
+  
 
+  // trees
+  drawtrees();
 
   grass.update();
 }
 
+function drawtrees(){
+  for (let i=0; i<5; i++){
+    if (randomList[i] > window.innerWidth/2.5 || randomList[i] < window.innerWidth/2){
+      push();
+      stroke(brown);
+      strokeWeight(8);
+      // Let's pick an angle 0 to 90 degrees based on the mouse position
+      let a = (randomList[i] / this.innerWidth) * 70;
+      // Convert it to radians
+      theta = radians(a);
+      // Start the tree from the bottom of the screen
+      translate(randomList[i], height);
+      // Draw a line 120 pixels
+      line(0,0,0,-120);
+      // Move to the end of that line
+      translate(0,-120);
+      // Start the recursive branching!
+      stroke(36, 89, 15); // dark green
+      branch(150);
+      pop();
+    }
+  }
+}
 
+function branch(h) {
+  // Each branch will be 2/3rds the size of the previous one
+  h *= 0.66;
+
+  // All recursive functions must have an exit condition!!!!
+  // Here, ours is when the length of the branch is 2 pixels or less
+  if (h > 2) {
+    push();    // Save the current state of transformation (i.e. where are we now)
+    rotate(theta);   // Rotate by theta
+    line(0, 0, 0, -h);  // Draw the branch
+    translate(0, -h); // Move to the end of the branch
+    branch(h);       // Ok, now call myself to draw two new branches!!
+    pop();     // Whenever we get back here, we "pop" in order to restore the previous matrix state
+
+    // Repeat the same thing, only branch off to the "left" this time!
+    push();
+    rotate(-theta);
+    line(0, 0, 0, -h);
+    translate(0, -h);
+    branch(h);
+    pop();
+  }
+}
 
 // function keyPressed() {
 //   loop();
