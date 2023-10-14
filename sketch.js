@@ -17,6 +17,9 @@ let Musketeer;
 let grass;
 let rot;
 
+let backgroundClock;
+let millisRolloverTime, prevSec;
+
 function preload() {
   Musketeer = new Sprite(window.innerWidth/2, 0, 500, 128);
 
@@ -29,19 +32,39 @@ function preload() {
 }
 
 function setup() {
-  new Canvas(window.innerWidth-4, window.innerHeight-4, 'pixelated x4');
+  createCanvas(window.innerWidth-4, window.innerHeight-4);
 
 	world.gravity.y = 10;
 
+  // make pretty background from my previous work
+  backgroundClock = new clock(hour(), minute(), second(), millis());
+
+  // make the pretty grass
+  noStroke();
+  let ground = new Sprite(0, window.innerHeight-5, window.innerWidth*2, 5, 'static');
+  ground.color = color(115, 58, 17);
   grass = new yard();
+
+
 	
 }
 
 function draw() {
   clear();
+  background(20, 13, 38);
+
+  // calculate millis
+  // Note that this is more correct than using millis()%1000;
+  if (prevSec != second()) {
+    millisRolloverTime = millis();
+  }
+  prevSec =  second();
+  mils = floor(millis() - millisRolloverTime);
+  backgroundClock = new clock(hour(), minute(), second(), mils);
 
   console.log(Musketeer.ani.name);
   if (kb.pressing('up')) {
+    // TODO change jump to left and right jumping so it looks right
     Musketeer.changeAni('jump');
   }
 
@@ -51,8 +74,8 @@ function draw() {
     Musketeer.changeAni('idle');
   }
   
-  if (kb.pressing('left')) Musketeer.vel.x = -1;
-  else if (kb.pressing('right')) Musketeer.vel.x = 1;
+  if (kb.pressing('left')) Musketeer.vel.x = -2;
+  else if (kb.pressing('right')) Musketeer.vel.x = 2;
   else Musketeer.vel.x = 0;
   
   if (Musketeer.ani.name != 'jump') {
