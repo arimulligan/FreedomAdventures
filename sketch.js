@@ -78,8 +78,8 @@ function draw() {
     Musketeer.changeAni('idle');
   }
   
-  if (kb.pressing('left')) Musketeer.vel.x = -2;
-  else if (kb.pressing('right')) Musketeer.vel.x = 2;
+  if (kb.pressing('left') && Musketeer.x > 0) Musketeer.vel.x = -2;
+  else if (kb.pressing('right')&& Musketeer.x < window.innerWidth) Musketeer.vel.x = 2;
   else Musketeer.vel.x = 0;
   
   if (Musketeer.ani.name != 'jump') {
@@ -92,6 +92,14 @@ function draw() {
     } else {
       Musketeer.changeAni('idle');
     }
+  }
+
+  // if the player walks outside of the screen - puts them in the opposite side.
+  if (Musketeer.x >= window.innerWidth){
+    Musketeer.x = 1;
+  }
+  else if (Musketeer.x <= 0){
+    Musketeer.x = window.innerWidth-1;
   }
 
 
