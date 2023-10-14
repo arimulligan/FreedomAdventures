@@ -20,6 +20,8 @@ let rot;
 let backgroundClock;
 let millisRolloverTime, prevSec;
 
+let randomList = [];
+
 function preload() {
   Musketeer = new Sprite(window.innerWidth/2, 0, 500, 128);
 
@@ -29,15 +31,18 @@ function preload() {
   }
   Musketeer.changeAni('idle');
   
+  
 }
 
 function setup() {
+  // Populate the static randomList array
+  for (let i = 0; i < 999; i++){
+      randomList.push(random(0, window.innerWidth));
+  }
+
   createCanvas(window.innerWidth-4, window.innerHeight-4);
 
 	world.gravity.y = 10;
-
-  // make pretty background from my previous work
-  backgroundClock = new clock(hour(), minute(), second(), millis());
 
   // make the pretty grass
   noStroke();
@@ -45,8 +50,6 @@ function setup() {
   ground.color = color(115, 58, 17);
   grass = new yard();
 
-
-	
 }
 
 function draw() {
@@ -60,7 +63,8 @@ function draw() {
   }
   prevSec =  second();
   mils = floor(millis() - millisRolloverTime);
-  backgroundClock = new clock(hour(), minute(), second(), mils);
+  // make pretty background from my previous work
+  backgroundClock = new clock(hour(), minute(), second(), mils, randomList);
 
   console.log(Musketeer.ani.name);
   if (kb.pressing('up')) {
