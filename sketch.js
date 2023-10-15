@@ -26,6 +26,12 @@ let randomList = [];
 let theta;
 var brown;
 
+// my own make shift 'timer' for events that should occur at specific times e.g. a welcome page
+let timer = 0;
+
+/**
+ * Before the site is loaded to the user, the sprites are loaded and created.
+ */
 function preload() {
   Musketeer = new Sprite(window.innerWidth/2, 0, 500, 128);
 
@@ -38,6 +44,10 @@ function preload() {
   
 }
 
+/**
+ * Same as preload function, however is for everything else that should be initialized only once,
+ * like random functions.
+ */
 function setup() {
   // Populate the static randomList array
   for (let i = 0; i < 999; i++){
@@ -57,7 +67,12 @@ function setup() {
 
 }
 
+/**
+ * This is on loop continuously, basically a rendering function which displays everything
+ * to the user on the browser.
+ */
 function draw() {
+  frameRate(60);
   clear();
   background(20, 13, 38);
 
@@ -69,7 +84,7 @@ function draw() {
   prevSec =  second();
   mils = floor(millis() - millisRolloverTime);
   // make pretty background from my previous work
-  backgroundClock = new clock(hour(), minute(), second(), mils, randomList);
+  backgroundClock = new clock(12, minute(), second(), mils, randomList); // TODO switch to hour()
 
   console.log(Musketeer.ani.name);
   if (kb.pressing('up')) {
@@ -121,27 +136,35 @@ function draw() {
   grass.update();
 }
 
+/**
+ * Draws the background trees randomly placing them.
+ */
 function drawtrees(){
+  let treeAngles = randomList.filter(p=> p < 80 && p > 5); // so when it zooms out, there aren't heaps of random clouds
   for (let i=0; i<5; i++){
-    if (randomList[i] > window.innerWidth/2.5 || randomList[i] < window.innerWidth/2){
-      push();
-      stroke(brown);
-      strokeWeight(8);
-      // Let's pick an angle 0 to 90 degrees based on the mouse position
-      let a = (randomList[i] / this.innerWidth) * 70;
-      // Convert it to radians
-      theta = radians(a);
-      // Start the tree from the bottom of the screen
-      translate(randomList[i], height);
-      // Draw a line 120 pixels
-      line(0,0,0,-120);
-      // Move to the end of that line
-      translate(0,-120);
-      // Start the recursive branching!
-      stroke(36, 89, 15); // dark green
-      branch(150);
-      pop();
-    }
+    push();
+    stroke(brown);
+    
+    // Let's pick an angle 0 to 90 degrees based on the mouse position
+    
+    let a = treeAngles[i];
+    // Convert it to radians
+    theta = radians(a);
+    // Start the tree from the bottom of the screen
+    translate(randomList[i], height);
+
+    scale(4);
+    // Draw a line 120 pixels
+    strokeWeight(2);
+    line(0,0,0,-120);
+    // Move to the end of that line
+    translate(0,-120);
+    // Start the recursive branching!
+    strokeWeight(1.5);
+    stroke(36, 89, 35); // dark green
+    branch(30);
+    pop();
+  
   }
 }
 
@@ -149,8 +172,7 @@ function branch(h) {
   // Each branch will be 2/3rds the size of the previous one
   h *= 0.66;
 
-  // All recursive functions must have an exit condition!!!!
-  // Here, ours is when the length of the branch is 2 pixels or less
+  // when the length of the branch is 2 pixels or less, leave recursion
   if (h > 2) {
     push();    // Save the current state of transformation (i.e. where are we now)
     rotate(theta);   // Rotate by theta

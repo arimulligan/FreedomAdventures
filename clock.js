@@ -93,7 +93,7 @@ class clock {
                 this.star(this.randomList[i], this.randomList[i+1], 11.6, 5, 3);
             } else {
                 // reset to start
-                let secondsResetsAfterFive = (seconds + this.randomList[i]) % 20;
+                let secondsResetsAfterFive = (seconds + this.randomList[i]) % 50;
                 let secondsWithFraction = secondsResetsAfterFive + (millis / 1000.0);
                 console.log(secondsWithFraction);
                 let startX = map(secondsWithFraction, 0, 30, -70, this.width*2);
@@ -142,7 +142,7 @@ class clock {
         for (var i = 0; i < 6; i++) {
             var cx = x - 100 / 2 + i * step;
             var cy = y + cos(i * PI / (6 - 1)) * 100 / 4;
-            var diameter = 100 / 2 - abs(cy - y) + offset + (this.randomList[i]/10);
+            var diameter = 100 / 2 - abs(cy - y) + offset + (this.randomList[i]/15);
 
             ellipse(cx, cy, diameter);
         }
