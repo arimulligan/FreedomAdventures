@@ -95,7 +95,6 @@ class clock {
                 // reset to start
                 let secondsResetsAfterFive = (seconds + this.randomList[i]) % 50;
                 let secondsWithFraction = secondsResetsAfterFive + (millis / 1000.0);
-                console.log(secondsWithFraction);
                 let startX = map(secondsWithFraction, 0, 30, -70, this.width*2);
 
                 this.drawCloud(startX, this.randomList[i+1]);
